@@ -48,11 +48,8 @@ const genericErrorResponse: ApiErrorResponse = {
   message: "Internal server error",
 };
 
-export default function makeServer(args: { environment: string }) {
-  const { environment = "development" } = args;
+export default function makeServer() {
   return createServer({
-    environment,
-
     seeds(server) {
       server.db.loadData({
         transactions: seedTransactions,
@@ -65,7 +62,7 @@ export default function makeServer(args: { environment: string }) {
 
       this.get("/transactions", (schema) => {
         // About 5% chance will fail
-        if (environment === "development" && Math.random() > 0.95) {
+        if (Math.random() > 0.95) {
           return new Response(500, {}, genericErrorResponse);
         }
 
@@ -74,7 +71,7 @@ export default function makeServer(args: { environment: string }) {
 
       this.put("/transactions/refund-all", (schema) => {
         // About 10% chance will fail
-        if (environment === "development" && Math.random() > 0.9) {
+        if (Math.random() > 0.9) {
           return new Response(500, {}, genericErrorResponse);
         }
 
